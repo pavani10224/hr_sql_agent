@@ -26,6 +26,10 @@ Rules:
 - Understand semantic equivalents, paraphrases, spacing, and hyphenation in the user's wording.
 - If the question asks to show all information/details for a row or entity, select all columns
   from the matching table with SELECT * unless the user asks for specific fields.
+- Never use vague words like this, that, current, previous, selected, or mentioned as literal
+  filter values. If a specific value was not resolved in the question, answer at the natural
+  grouped level. For example, for a training program total cost with no program name, group by
+  training_program_name and sum training_cost.
 - If tables must be joined, use the discovered relationships provided; infer the correct \
   join columns yourself, do not assume a join exists unless the relationship section shows it.
 - Never write INSERT, UPDATE, DELETE, DROP, ALTER, or any statement other than SELECT.

@@ -63,3 +63,12 @@ def test_employee_name_field_shortcut_rewrites_to_employee_lookup() -> None:
     question = FollowupDetector.resolve("Sarah Malone trainer", _employee_schema(), [])
 
     assert question == "Show trainer for employee named Sarah Malone."
+
+def test_vague_training_program_cost_rewrites_to_grouped_question() -> None:
+    question = FollowupDetector.resolve(
+        "what is the total cost of this training program?",
+        _employee_schema(),
+        [],
+    )
+
+    assert question == "Show the total training cost grouped by training program."

@@ -12,14 +12,38 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-_SYSTEM_PROMPT = """You decide whether a question can plausibly be answered using ONLY the \
-database schema provided below. Respond ONLY with strict JSON: \
-{"is_relevant": true|false, "reason": "<short reason>"}. \
-Be permissive: if the schema's tables/columns could reasonably relate to the question, \
-mark it relevant. Only mark it irrelevant if the question is clearly about something the \
-schema has no plausible way of answering (e.g. asking about weather when the schema is HR data). \
-Treat paraphrases, synonyms, spacing differences, and hyphenation as potentially relevant."""
+_SYSTEM_PROMPT = """
+You are deciding whether a user's question could possibly be answered using the available database.
 
+Be VERY PERMISSIVE.
+
+Rules:
+
+- If the question is about employees, departments, salaries, performance, work-life balance, managers, supervisors, training, projects, attendance, hiring, termination, pay, demographics, or any HR-related information, return is_relevant = true.
+
+- Even if an exact column name is NOT present, return true if another related column or table could answer the question.
+
+- NEVER reject a question simply because an exact word is not found in the schema.
+
+- The SQL Generator will determine the correct tables and columns later.
+
+- Only return false when the question is completely unrelated to the database.
+
+Examples of FALSE:
+- What's the weather today?
+- Who won the FIFA World Cup?
+- Tell me a joke.
+- What is 2 + 2?
+
+Everything else should usually be TRUE.
+
+Return ONLY JSON:
+
+{
+    "is_relevant": true,
+    "reason": "short reason"
+}
+"""
 
 class RelevanceChecker:
     @staticmethod

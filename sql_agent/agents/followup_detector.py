@@ -18,6 +18,10 @@ logger = get_logger(__name__)
 
 _SHORTCUT_RE = re.compile(r"^\s*(?:emp|employee|id)\s*[:#-]?\s*(\d+)\s*$", re.IGNORECASE)
 _NAME_FIELD_RE = re.compile(r"^\s*([a-z][a-z'-]{1,})\s+([a-z][a-z'-]{1,})\s+(.+?)\s*$", re.IGNORECASE)
+_VAGUE_TRAINING_PROGRAM_RE = re.compile(
+    r"\b(?:this|that|current|previous|selected|mentioned)\s+training\s+program\b",
+    re.IGNORECASE,
+)
 _NON_NAME_TERMS = {
     "department",
     "employee",
@@ -58,6 +62,10 @@ class FollowupDetector:
             return name_field_question
 
         if not history:
+            vague_training_question = FollowupDetector._unresolved_training_program_shortcut(question)
+            if vague_training_question:
+                logger.info("Resolved vague training program question to: %s", vague_training_question)
+                return vague_training_question
             return question
 
         user_prompt = (
@@ -69,6 +77,10 @@ class FollowupDetector:
         standalone = result.get("standalone_question", question)
         if not isinstance(standalone, str) or not standalone.strip():
             standalone = question
+
+        vague_training_question = FollowupDetector._unresolved_training_program_shortcut(standalone)
+        if vague_training_question:
+            standalone = vague_training_question
 
         logger.info(
             "Follow-up resolution: %s -> %s (%s)",
@@ -106,6 +118,17 @@ class FollowupDetector:
             return None
 
         return f"Show {requested_field.strip()} for employee named {first_name.title()} {last_name.title()}."
+
+    @staticmethod
+    def _unresolved_training_program_shortcut(question: str) -> str | None:
+        if not _VAGUE_TRAINING_PROGRAM_RE.search(question):
+            return None
+
+        normalized = question.lower()
+        if "cost" not in normalized:
+            return None
+
+        return "Show the total training cost grouped by training program."
 
     @staticmethod
     def _find_column(schema: DatabaseSchema, column_name: str) -> tuple[str, str] | None:

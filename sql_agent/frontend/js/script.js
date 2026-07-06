@@ -7,6 +7,17 @@ const loading = document.getElementById("loading");
 
 const API_URL = "http://127.0.0.1:8000";
 
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
 // -----------------------------
 // Add Chat Message
 // -----------------------------
@@ -97,7 +108,7 @@ function createTable(rows) {
 
     Object.keys(rows[0]).forEach(col => {
 
-        html += `<th>${col}</th>`;
+        html += `<th>${escapeHtml(col)}</th>`;
 
     });
 
@@ -111,7 +122,7 @@ function createTable(rows) {
 
         Object.values(row).forEach(value => {
 
-            html += `<td>${value}</td>`;
+            html += `<td>${escapeHtml(value)}</td>`;
 
         });
 
@@ -139,7 +150,7 @@ function displayResponse(data) {
 
         <h4>🧠 Generated SQL</h4>
 
-        <textarea class="sql-box">${data.generated_sql || ""}</textarea>
+        <textarea class="sql-box">${escapeHtml(data.generated_sql || "")}</textarea>
 
         <button class="run-btn">▶ Run SQL</button>
 
@@ -155,7 +166,7 @@ function displayResponse(data) {
 
             <h4>💡 Business Summary</h4>
 
-            <p>${data.answer}</p>
+            <p>${escapeHtml(data.answer)}</p>
 
         </div>
 

@@ -86,7 +86,7 @@ def sql_execution_node(state: AgentState) -> AgentState:
 
 def response_generator_node(state: AgentState) -> AgentState:
     display_question = state.get("original_question", state["question"])
-    answer = ResponseGenerator.generate(display_question, state.get("sql_rows", []))
+    answer = ResponseGenerator.generate(state["question"], state.get("sql_rows", []))
     app_state.record_query(display_question, state.get("generated_sql"), state.get("selected_tables", []))
     return {**state, "final_answer": answer}
 
