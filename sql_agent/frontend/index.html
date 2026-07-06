@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR SQL AI Agent</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Header -->
+        <header class="header">
+            <h1>🤖 HR SQL AI Agent</h1>
+        </header>
+
+        <!-- Chat Messages -->
+        <div id="chat-container"></div>
+        <div id="loading" class="loading" style="display:none;">
+            <div class="spinner"></div>
+            <span>Generating SQL...</span>
+        </div>
+ 
+<div id="loading" class="loading" style="display:none;">
+
+    <div class="spinner"></div>
+
+    <span>Generating SQL...</span>
+
+</div>
+
+<div id="sql-panel" class="sql-panel" style="display:none;">
+
+    <h3>🧠 Generated SQL</h3>
+
+    <textarea id="sql-editor"></textarea>
+
+</div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="user-input"
+                placeholder="Ask anything about your database..."
+            >
+
+            <button id="send-btn">
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
